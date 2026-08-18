@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>CourtReserve</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand fw-bold" th:href="@{/}"> CourtReserve </a>
+
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarPrincipal"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarPrincipal">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" th:href="@{/}"> Inicio </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" th:href="@{/usuarios}"> Usuarios </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" th:href="@{/canchas}"> Canchas </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" th:href="@{/reservas}"> Reservas </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container py-5">
+      <div class="mb-5">
+        <h1 class="fw-bold">Panel de administración</h1>
+
+        <p class="text-muted">
+          Sistema de gestión de reservas de canchas deportivas.
+        </p>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="card shadow-sm border-0 h-100">
+            <div class="card-body">
+              <h5 class="card-title text-muted">Usuarios registrados</h5>
+
+              <p class="display-4 fw-bold" th:text="${totalUsuarios}">0</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card shadow-sm border-0 h-100">
+            <div class="card-body">
+              <h5 class="card-title text-muted">Canchas</h5>
+
+              <p class="display-4 fw-bold" th:text="${totalCanchas}">0</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card shadow-sm border-0 h-100">
+            <div class="card-body">
+              <h5 class="card-title text-muted">Reservas</h5>
+
+              <p class="display-4 fw-bold" th:text="${totalReservas}">0</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card shadow-sm border-0 mt-5">
+        <div class="card-body p-4">
+          <h4 class="fw-bold">CourtReserve</h4>
+
+          <p class="text-muted mb-0">
+            Plataforma para gestionar usuarios, canchas deportivas y reservas,
+            aplicando validaciones de disponibilidad, horarios y reglas de
+            negocio.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

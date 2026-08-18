@@ -1,0 +1,59 @@
+# ==========================================================
+# CourtReserve - .gitignore
+# ==========================================================
+
+### Gradle ###
+.gradle/
+build/
+bin/
+
+# Mantener Gradle Wrapper
+!gradle/wrapper/gradle-wrapper.jar
+
+### Java ###
+*.class
+*.log
+hs_err_pid*
+
+### Spring Boot ###
+HELP.md
+
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+### Eclipse / STS ###
+.apt_generated/
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
+
+### Sistema operativo ###
+.DS_Store
+Thumbs.db
+
+### Variables de entorno / secretos ###
+.env
+.env.*
+*.env
+
+### Archivos locales de base de datos ###
+*.db
+*.sqlite
+*.sqlite3
