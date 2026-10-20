@@ -3,6 +3,7 @@ package com.courtreserve.repository;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -16,6 +17,15 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
     List<Reserva> findByUsuarioId(Long usuarioId);
 
     List<Reserva> findByCanchaId(Long canchaId);
+
+    @Query("""
+        SELECT r
+        FROM Reserva r
+        JOIN FETCH r.usuario
+        JOIN FETCH r.cancha
+        WHERE r.id = :id
+        """)
+    Optional<Reserva> findByIdConRelaciones(@Param("id") Long id);
 
     @Query("""
         SELECT r
