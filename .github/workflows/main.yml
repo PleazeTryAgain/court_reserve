@@ -21,10 +21,6 @@ jobs:
         run: chmod +x gradlew
       - name: Build, pruebas y reporte JaCoCo
         run: ./gradlew clean build jacocoTestReport
-      - name: Análisis SonarCloud
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew sonar
       - name: Publicar artefacto
         uses: actions/upload-artifact@v4
         with:

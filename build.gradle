@@ -32,6 +32,7 @@ dependencies {
 	testImplementation 'io.karatelabs:karate-junit5:1.5.1'
 	testRuntimeOnly 'com.h2database:h2'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	testRuntimeOnly 'com.h2database:h2'
 }
 
 tasks.named('test') {
