@@ -8,6 +8,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.courtreserve.model.Cancha;
 import com.courtreserve.model.EstadoReserva;
@@ -121,9 +122,10 @@ public class ReservaService {
                 .divide(BigDecimal.valueOf(60), 2, RoundingMode.HALF_UP);
     }
 
+    @Transactional
     public Reserva cancelarReserva(Long reservaId) {
 
-        Reserva reserva = reservaRepository.findById(reservaId)
+        Reserva reserva = reservaRepository.findByIdConRelaciones(reservaId)
                 .orElseThrow(() -> new IllegalArgumentException("Reserva no encontrada"));
 
         if (reserva.getEstado() == EstadoReserva.CANCELADA) {
@@ -132,7 +134,7 @@ public class ReservaService {
 
         reserva.setEstado(EstadoReserva.CANCELADA);
 
-        return reservaRepository.save(reserva);
+        return reserva;
     }
 
     public List<Reserva> listarReservas() {
