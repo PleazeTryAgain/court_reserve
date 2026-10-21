@@ -10,6 +10,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.courtreserve.exception.RecursoNoEncontradoException;
 import com.courtreserve.model.Cancha;
 import com.courtreserve.model.EstadoReserva;
 import com.courtreserve.model.Reserva;
@@ -46,10 +47,10 @@ public class ReservaService {
         validarHorario(horaInicio, horaFin);
 
         Usuario usuario = usuarioRepository.findById(usuarioId)
-                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+                .orElseThrow(() -> new RecursoNoEncontradoException("Usuario no encontrado"));
 
         Cancha cancha = canchaRepository.findById(canchaId)
-                .orElseThrow(() -> new IllegalArgumentException("Cancha no encontrada"));
+                .orElseThrow(() -> new RecursoNoEncontradoException("Cancha no encontrada"));
 
         if (!cancha.isActiva()) {
             throw new IllegalStateException("La cancha no está disponible");
@@ -126,7 +127,7 @@ public class ReservaService {
     public Reserva cancelarReserva(Long reservaId) {
 
         Reserva reserva = reservaRepository.findByIdConRelaciones(reservaId)
-                .orElseThrow(() -> new IllegalArgumentException("Reserva no encontrada"));
+                .orElseThrow(() -> new RecursoNoEncontradoException("Reserva no encontrada"));
 
         if (reserva.getEstado() == EstadoReserva.CANCELADA) {
             throw new IllegalStateException("La reserva ya está cancelada");
