@@ -65,3 +65,17 @@ Feature: Gestión de canchas por la API REST
     When method patch
     Then status 404
     And match response.error == 'Cancha no encontrada'
+
+  Scenario: Rechazar una cancha sin precio por hora
+    Given path 'api/canchas'
+    And request { nombre: 'Cancha sin precio', tipo: 'TENIS' }
+    When method post
+    Then status 400
+    And match response.precioHora == 'El precio por hora es obligatorio'
+
+  Scenario: Rechazar un nombre de cancha que supera el límite
+    Given path 'api/canchas'
+    And request { nombre: '#(nombreCanchaLargo)', tipo: 'TENIS', precioHora: 50000 }
+    When method post
+    Then status 400
+    And match response.nombre == 'El nombre no puede superar los 100 caracteres'

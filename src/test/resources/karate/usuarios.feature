@@ -50,3 +50,17 @@ Feature: Gestión de usuarios por la API REST
     When method get
     Then status 404
     And match response.error == 'Usuario no encontrado'
+
+  Scenario: Rechazar un usuario sin correo
+    Given path 'api/usuarios'
+    And request { nombre: 'Usuario sin correo', telefono: '3001234567' }
+    When method post
+    Then status 400
+    And match response.correo == 'El correo es obligatorio'
+
+  Scenario: Rechazar un nombre de usuario que supera el límite
+    Given path 'api/usuarios'
+    And request { nombre: '#(nombreUsuarioLargo)', correo: '#(uniqueEmail)', telefono: '3001234567' }
+    When method post
+    Then status 400
+    And match response.nombre == 'El nombre no puede superar los 100 caracteres'

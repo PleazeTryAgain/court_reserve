@@ -144,3 +144,29 @@ Feature: Gestión de reservas por la API REST
     When method patch
     Then status 404
     And match response.error == 'Reserva no encontrada'
+
+  Scenario: Permitir reservas consecutivas sin solapamiento
+    Given path 'api/reservas'
+    And request { usuarioId: '#(usuarioId)', canchaId: '#(canchaId)', fecha: '#(futureDate)', horaInicio: '10:00:00', horaFin: '11:00:00' }
+    When method post
+    Then status 201
+    And match response.precioTotal == 50000
+
+    Given path 'api/reservas'
+    And request { usuarioId: '#(usuarioId)', canchaId: '#(canchaId)', fecha: '#(futureDate)', horaInicio: '11:00:00', horaFin: '12:00:00' }
+    When method post
+    Then status 201
+    And match response.estado == 'ACTIVA'
+    And match response.precioTotal == 50000
+
+  Scenario: Rechazar una reserva que contiene por completo otra reserva activa
+    Given path 'api/reservas'
+    And request { usuarioId: '#(usuarioId)', canchaId: '#(canchaId)', fecha: '#(futureDate)', horaInicio: '11:00:00', horaFin: '12:00:00' }
+    When method post
+    Then status 201
+
+    Given path 'api/reservas'
+    And request { usuarioId: '#(usuarioId)', canchaId: '#(canchaId)', fecha: '#(futureDate)', horaInicio: '10:00:00', horaFin: '13:00:00' }
+    When method post
+    Then status 409
+    And match response.error == 'La cancha ya está reservada en ese horario'

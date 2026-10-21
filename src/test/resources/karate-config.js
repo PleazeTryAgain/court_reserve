@@ -10,6 +10,8 @@ function fn() {
   config.pastDate = LocalDate.now().minusDays(1).toString();
   config.uniqueEmail = 'karate-' + UUID.randomUUID().toString() + '@example.com';
   config.idInexistente = 999999;
+  config.nombreCanchaLargo = 'C'.repeat(101);
+  config.nombreUsuarioLargo = 'U'.repeat(101);
 
   karate.configure('connectTimeout', 5000);
   karate.configure('readTimeout', 10000);
