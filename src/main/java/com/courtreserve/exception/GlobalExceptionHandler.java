@@ -12,28 +12,33 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    private static final String CLAVE_ERROR = "error";
+
+    @ExceptionHandler(RecursoNoEncontradoException.class)
+    public ResponseEntity<Map<String, String>> manejarRecursoNoEncontrado(
+            RecursoNoEncontradoException ex) {
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(Map.of(CLAVE_ERROR, ex.getMessage()));
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, String>> manejarIllegalArgumentException(
             IllegalArgumentException ex) {
 
-        Map<String, String> respuesta = new HashMap<>();
-        respuesta.put("error", ex.getMessage());
-
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(respuesta);
+                .body(Map.of(CLAVE_ERROR, ex.getMessage()));
     }
 
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<Map<String, String>> manejarIllegalStateException(
             IllegalStateException ex) {
 
-        Map<String, String> respuesta = new HashMap<>();
-        respuesta.put("error", ex.getMessage());
-
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
-                .body(respuesta);
+                .body(Map.of(CLAVE_ERROR, ex.getMessage()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

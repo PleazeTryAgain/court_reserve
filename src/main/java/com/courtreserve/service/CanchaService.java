@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.courtreserve.exception.RecursoNoEncontradoException;
 import com.courtreserve.model.Cancha;
 import com.courtreserve.repository.CanchaRepository;
 
@@ -26,7 +27,7 @@ public class CanchaService {
 
     public Cancha buscarPorId(Long id) {
         return canchaRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Cancha no encontrada"));
+                .orElseThrow(() -> new RecursoNoEncontradoException("Cancha no encontrada"));
     }
 
     public Cancha cambiarEstado(Long id, boolean activa) {

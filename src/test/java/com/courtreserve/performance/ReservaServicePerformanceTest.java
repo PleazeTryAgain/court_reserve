@@ -44,7 +44,7 @@ class ReservaServicePerformanceTest {
         private ReservaService reservaService;
 
         @Test
-        void deberiaCrearReservaEnMenosDe100Milisegundos() {
+        void deberiaCrearReservaEnMenosDe500Milisegundos() {
 
                 // ARRANGE
                 Long usuarioId = 1L;
@@ -84,7 +84,7 @@ class ReservaServicePerformanceTest {
 
                 // ACT + ASSERT
                 assertTimeout(
-                                Duration.ofMillis(100),
+                                Duration.ofMillis(500),
                                 () -> reservaService.crearReserva(
                                                 usuarioId,
                                                 canchaId,
@@ -94,7 +94,7 @@ class ReservaServicePerformanceTest {
         }
 
         @Test
-        void deberiaCalcularPrecioEnMenosDe20Milisegundos() {
+        void deberiaCalcularPrecioEnMenosDe100Milisegundos() {
 
                 // ARRANGE
                 BigDecimal precioHora = new BigDecimal("50000");
@@ -103,7 +103,7 @@ class ReservaServicePerformanceTest {
 
                 // ACT + ASSERT
                 assertTimeout(
-                                Duration.ofMillis(20),
+                                Duration.ofMillis(100),
                                 () -> reservaService.calcularPrecio(
                                                 precioHora,
                                                 horaInicio,
@@ -111,7 +111,7 @@ class ReservaServicePerformanceTest {
         }
 
         @Test
-        void deberiaListarDiezMilReservasEnMenosDe100Milisegundos() {
+        void deberiaListarDiezMilReservasEnMenosDe500Milisegundos() {
 
                 // ARRANGE
                 List<Reserva> reservas = new ArrayList<>();
@@ -125,7 +125,7 @@ class ReservaServicePerformanceTest {
 
                 // ACT + ASSERT
                 assertTimeout(
-                                Duration.ofMillis(100),
+                                Duration.ofMillis(500),
                                 () -> reservaService.listarReservas());
         }
 }

@@ -22,6 +22,15 @@ import com.courtreserve.service.UsuarioService;
 @Controller
 public class WebController {
 
+    static final String MENSAJE_EXITO = "mensajeExito";
+    static final String MENSAJE_ERROR = "mensajeError";
+
+    private static final String VISTA_USUARIOS = "usuarios";
+    private static final String VISTA_CANCHAS = "canchas";
+    private static final String VISTA_RESERVAS = "reservas";
+
+    private static final String REDIRECT = "redirect:/";
+
     private final UsuarioService usuarioService;
     private final CanchaService canchaService;
     private final ReservaService reservaService;
@@ -58,10 +67,10 @@ public class WebController {
     public String usuarios(Model model) {
 
         model.addAttribute(
-                "usuarios",
+                VISTA_USUARIOS,
                 usuarioService.listarUsuarios());
 
-        return "usuarios";
+        return VISTA_USUARIOS;
     }
 
     @PostMapping("/usuarios")
@@ -71,41 +80,26 @@ public class WebController {
             @RequestParam(required = false) String telefono,
             RedirectAttributes redirectAttributes) {
 
-        try {
+        ejecutarConMensaje(
+                () -> usuarioService.crearUsuario(new Usuario(nombre, correo, telefono)),
+                "Usuario registrado correctamente.",
+                redirectAttributes);
 
-            Usuario usuario = new Usuario(
-                    nombre,
-                    correo,
-                    telefono);
-
-            usuarioService.crearUsuario(usuario);
-
-            redirectAttributes.addFlashAttribute(
-                    "mensajeExito",
-                    "Usuario registrado correctamente.");
-
-        } catch (Exception e) {
-
-            redirectAttributes.addFlashAttribute(
-                    "mensajeError",
-                    e.getMessage());
-        }
-
-        return "redirect:/usuarios";
+        return REDIRECT + VISTA_USUARIOS;
     }
 
     @GetMapping("/canchas")
     public String canchas(Model model) {
 
         model.addAttribute(
-                "canchas",
+                VISTA_CANCHAS,
                 canchaService.listarCanchas());
 
         model.addAttribute(
                 "tiposCancha",
                 TipoCancha.values());
 
-        return "canchas";
+        return VISTA_CANCHAS;
     }
 
     @PostMapping("/canchas")
@@ -115,28 +109,12 @@ public class WebController {
             @RequestParam BigDecimal precioHora,
             RedirectAttributes redirectAttributes) {
 
-        try {
+        ejecutarConMensaje(
+                () -> canchaService.crearCancha(new Cancha(nombre, tipo, precioHora, true)),
+                "Cancha registrada correctamente.",
+                redirectAttributes);
 
-            Cancha cancha = new Cancha(
-                    nombre,
-                    tipo,
-                    precioHora,
-                    true);
-
-            canchaService.crearCancha(cancha);
-
-            redirectAttributes.addFlashAttribute(
-                    "mensajeExito",
-                    "Cancha registrada correctamente.");
-
-        } catch (Exception e) {
-
-            redirectAttributes.addFlashAttribute(
-                    "mensajeError",
-                    e.getMessage());
-        }
-
-        return "redirect:/canchas";
+        return REDIRECT + VISTA_CANCHAS;
     }
 
     @PostMapping("/canchas/{id}/estado")
@@ -145,39 +123,29 @@ public class WebController {
             @RequestParam boolean activa,
             RedirectAttributes redirectAttributes) {
 
-        try {
+        ejecutarConMensaje(
+                () -> canchaService.cambiarEstado(id, activa),
+                activa
+                        ? "Cancha activada correctamente."
+                        : "Cancha desactivada correctamente.",
+                redirectAttributes);
 
-            canchaService.cambiarEstado(id, activa);
-
-            redirectAttributes.addFlashAttribute(
-                    "mensajeExito",
-                    activa
-                            ? "Cancha activada correctamente."
-                            : "Cancha desactivada correctamente.");
-
-        } catch (Exception e) {
-
-            redirectAttributes.addFlashAttribute(
-                    "mensajeError",
-                    e.getMessage());
-        }
-
-        return "redirect:/canchas";
+        return REDIRECT + VISTA_CANCHAS;
     }
 
     @GetMapping("/reservas")
     public String reservas(Model model) {
 
         model.addAttribute(
-                "reservas",
+                VISTA_RESERVAS,
                 reservaService.listarReservas());
 
         model.addAttribute(
-                "usuarios",
+                VISTA_USUARIOS,
                 usuarioService.listarUsuarios());
 
         model.addAttribute(
-                "canchas",
+                VISTA_CANCHAS,
                 canchaService.listarCanchas()
                         .stream()
                         .filter(Cancha::isActiva)
@@ -187,7 +155,7 @@ public class WebController {
                 "fechaMinima",
                 LocalDate.now());
 
-        return "reservas";
+        return VISTA_RESERVAS;
     }
 
     @PostMapping("/reservas")
@@ -199,27 +167,17 @@ public class WebController {
             @RequestParam LocalTime horaFin,
             RedirectAttributes redirectAttributes) {
 
-        try {
+        ejecutarConMensaje(
+                () -> reservaService.crearReserva(
+                        usuarioId,
+                        canchaId,
+                        fecha,
+                        horaInicio,
+                        horaFin),
+                "Reserva creada correctamente.",
+                redirectAttributes);
 
-            reservaService.crearReserva(
-                    usuarioId,
-                    canchaId,
-                    fecha,
-                    horaInicio,
-                    horaFin);
-
-            redirectAttributes.addFlashAttribute(
-                    "mensajeExito",
-                    "Reserva creada correctamente.");
-
-        } catch (Exception e) {
-
-            redirectAttributes.addFlashAttribute(
-                    "mensajeError",
-                    e.getMessage());
-        }
-
-        return "redirect:/reservas";
+        return REDIRECT + VISTA_RESERVAS;
     }
 
     @PostMapping("/reservas/{id}/cancelar")
@@ -227,21 +185,32 @@ public class WebController {
             @PathVariable Long id,
             RedirectAttributes redirectAttributes) {
 
+        ejecutarConMensaje(
+                () -> reservaService.cancelarReserva(id),
+                "Reserva cancelada correctamente.",
+                redirectAttributes);
+
+        return REDIRECT + VISTA_RESERVAS;
+    }
+
+    /**
+     * Ejecuta una operación de negocio y deja en la redirección un mensaje
+     * de éxito o el mensaje de la regla de negocio que se incumplió.
+     */
+    private void ejecutarConMensaje(
+            Runnable operacion,
+            String mensajeExito,
+            RedirectAttributes redirectAttributes) {
+
         try {
 
-            reservaService.cancelarReserva(id);
+            operacion.run();
 
-            redirectAttributes.addFlashAttribute(
-                    "mensajeExito",
-                    "Reserva cancelada correctamente.");
+            redirectAttributes.addFlashAttribute(MENSAJE_EXITO, mensajeExito);
 
-        } catch (Exception e) {
+        } catch (IllegalArgumentException | IllegalStateException e) {
 
-            redirectAttributes.addFlashAttribute(
-                    "mensajeError",
-                    e.getMessage());
+            redirectAttributes.addFlashAttribute(MENSAJE_ERROR, e.getMessage());
         }
-
-        return "redirect:/reservas";
     }
 }

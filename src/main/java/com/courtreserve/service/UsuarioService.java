@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.courtreserve.exception.RecursoNoEncontradoException;
 import com.courtreserve.model.Usuario;
 import com.courtreserve.repository.UsuarioRepository;
 
@@ -31,6 +32,6 @@ public class UsuarioService {
 
     public Usuario buscarPorId(Long id) {
         return usuarioRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+                .orElseThrow(() -> new RecursoNoEncontradoException("Usuario no encontrado"));
     }
 }
