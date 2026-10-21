@@ -30,6 +30,21 @@ jobs:
         run: chmod +x gradlew
       - name: Build, pruebas unitarias, pruebas Karate y cobertura JaCoCo
         run: ./gradlew clean build jacocoTestReport
+      - name: Validar token de SonarQube Cloud
+        if: ${{ github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository }}
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          if [ -z "$SONAR_TOKEN" ]; then
+            echo "::error::El secret SONAR_TOKEN no está disponible en este workflow. Créalo en Settings > Secrets and variables > Actions > Repository secrets."
+            exit 1
+          fi
+          respuesta=$(curl -s -u "$SONAR_TOKEN:" https://sonarcloud.io/api/authentication/validate)
+          if ! echo "$respuesta" | grep -q '"valid":true'; then
+            echo "::error::SonarQube Cloud rechazó el SONAR_TOKEN (revocado, expirado o generado en otro servidor). Genera uno nuevo en sonarcloud.io > My Account > Security."
+            exit 1
+          fi
+          echo "Token válido."
       - name: Análisis estático con SonarQube Cloud
         if: ${{ github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository }}
         env:
