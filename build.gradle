@@ -3,6 +3,7 @@ plugins {
     id 'jacoco'
     id 'org.springframework.boot' version '4.1.0'
     id 'io.spring.dependency-management' version '1.1.7'
+    id 'org.sonarqube' version '7.5.0.8588'
 }
 
 group = 'com.courtreserve'
@@ -32,19 +33,84 @@ dependencies {
 	testImplementation 'io.karatelabs:karate-junit5:1.5.1'
 	testRuntimeOnly 'com.h2database:h2'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-	testRuntimeOnly 'com.h2database:h2'
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
+// Pruebas unitarias y de integración (excluye las de aceptación con Karate)
+tasks.named('test', Test) {
+    useJUnitPlatform {
+        excludeTags 'karate'
+    }
 }
+
+// Pruebas de aceptación de la API REST con Karate
+def karateTest = tasks.register('karateTest', Test) {
+    description = 'Ejecuta las pruebas de aceptación de la API con Karate.'
+    group = 'verification'
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+    useJUnitPlatform {
+        includeTags 'karate'
+    }
+    shouldRunAfter tasks.named('test')
+}
+
+tasks.named('check') {
+    dependsOn karateTest
+}
+
+// Umbrales alineados con el Quality Gate "Sonar way"
+def coberturaMinima = 0.80
+def exclusionesCobertura = ['com/courtreserve/CourtReserveApplication.class']
 
 jacocoTestReport {
-    dependsOn test
+    dependsOn tasks.named('test'), karateTest
+    executionData.setFrom(fileTree(layout.buildDirectory.dir('jacoco')).include('*.exec'))
+
+    classDirectories.setFrom(files(classDirectories.files.collect {
+        fileTree(dir: it, exclude: exclusionesCobertura)
+    }))
 
     reports {
         html.required = true
         xml.required = true
         csv.required = false
+    }
+}
+
+jacocoTestCoverageVerification {
+    dependsOn jacocoTestReport
+    executionData.setFrom(jacocoTestReport.executionData)
+    classDirectories.setFrom(jacocoTestReport.classDirectories)
+
+    violationRules {
+        rule {
+            limit {
+                counter = 'LINE'
+                minimum = coberturaMinima
+            }
+            limit {
+                counter = 'BRANCH'
+                minimum = coberturaMinima
+            }
+        }
+    }
+}
+
+tasks.named('check') {
+    dependsOn jacocoTestCoverageVerification
+}
+
+sonar {
+    properties {
+        property 'sonar.projectKey', 'PleazeTryAgain_court_reserve'
+        property 'sonar.organization', 'pleazetryagain'
+        property 'sonar.host.url', 'https://sonarcloud.io'
+        property 'sonar.coverage.jacoco.xmlReportPaths',
+                layout.buildDirectory.file('reports/jacoco/test/jacocoTestReport.xml').get().asFile.path
+        property 'sonar.junit.reportPaths', [
+                layout.buildDirectory.dir('test-results/test').get().asFile.path,
+                layout.buildDirectory.dir('test-results/karateTest').get().asFile.path
+        ].join(',')
+        property 'sonar.coverage.exclusions', '**/CourtReserveApplication.java'
     }
 }

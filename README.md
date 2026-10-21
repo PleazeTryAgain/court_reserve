@@ -231,40 +231,53 @@ Actualmente se evalúan los siguientes escenarios:
 
 | Operación | Criterio |
 | --- | ---: |
-| Crear una reserva | Menos de 100 ms |
-| Calcular el precio de una reserva | Menos de 20 ms |
-| Listar 10.000 reservas | Menos de 100 ms |
+| Crear una reserva | Menos de 500 ms |
+| Calcular el precio de una reserva | Menos de 100 ms |
+| Listar 10.000 reservas | Menos de 500 ms |
 
-Estas pruebas se ejecutan con dependencias simuladas mediante **Mockito**, por lo que están orientadas a evaluar el comportamiento del servicio de manera aislada y no el rendimiento completo de PostgreSQL o de la aplicación desplegada.
+Estas pruebas se ejecutan con dependencias simuladas mediante **Mockito**, por lo que están orientadas a evaluar el comportamiento del servicio de manera aislada y no el rendimiento completo de PostgreSQL o de la aplicación desplegada. Los umbrales tienen margen para que sean estables en los runners de GitHub Actions.
+
+---
+
+## Pruebas de aceptación con Karate
+
+Las pruebas de aceptación de la API REST están escritas con **Karate** y se ejecutan en una tarea separada (`karateTest`). La aplicación se levanta en un puerto aleatorio con base de datos H2.
+
+| Archivo | Cobertura funcional |
+| --- | --- |
+| `src/test/resources/karate/usuarios.feature` | Registro, consulta, correo duplicado, validaciones y usuario inexistente (404) |
+| `src/test/resources/karate/canchas.feature` | Registro, consulta, cambio de estado, validaciones y cancha inexistente (404) |
+| `src/test/resources/karate/reservas.feature` | Creación, cálculo de precio, solapamiento, cancha inactiva, horarios y fechas inválidas, cancelación y recursos inexistentes |
+
+El reporte se genera en `build/karate-reports/karate-summary.html`.
 
 ---
 
 ## Cobertura de código
 
-El proyecto utiliza **JaCoCo** para generar reportes de cobertura de las pruebas.
+El proyecto utiliza **JaCoCo** para medir la cobertura de las pruebas unitarias y de las pruebas Karate en un único reporte (HTML y XML).
 
-La configuración genera:
-
-- Reporte HTML.
-- Reporte XML.
-
-Para ejecutar las pruebas y generar el reporte en Linux/macOS:
-
-```bash
-./gradlew test jacocoTestReport
-```
-
-En Windows:
-
-```powershell
-.\gradlew.bat test jacocoTestReport
-```
+El build exige como mínimo **80 % de cobertura de líneas y de ramas**, el mismo umbral del Quality Gate *Sonar way*. Si no se cumple, la tarea `check` falla.
 
 El reporte HTML generado puede consultarse en:
 
 ```text
 build/reports/jacoco/test/html/index.html
 ```
+
+---
+
+## Integración continua y análisis estático
+
+El workflow `.github/workflows/main.yml` se ejecuta en cada push a `main` y en cada Pull Request:
+
+1. Compila el proyecto con Java 17.
+2. Ejecuta las pruebas unitarias, las de rendimiento y las de aceptación con Karate.
+3. Genera el reporte de cobertura JaCoCo y verifica el umbral mínimo.
+4. Envía el análisis estático a **SonarQube Cloud** (proyecto `PleazeTryAgain_court_reserve`, organización `pleazetryagain`) junto con la cobertura y los resultados de pruebas.
+5. Publica los reportes de pruebas y el `.jar` como artefactos.
+
+El análisis requiere el secret `SONAR_TOKEN` en el repositorio y tener desactivado el *Automatic Analysis* en SonarQube Cloud.
 
 ---
 
