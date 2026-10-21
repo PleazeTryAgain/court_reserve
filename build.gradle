@@ -112,5 +112,8 @@ sonar {
                 layout.buildDirectory.dir('test-results/karateTest').get().asFile.path
         ].join(',')
         property 'sonar.coverage.exclusions', '**/CourtReserveApplication.java'
+
+        // Por defecto el plugin solo analiza src/main/java; se suman las plantillas Thymeleaf
+        properties['sonar.sources'] += file('src/main/resources/templates')
     }
 }
