@@ -1,5 +1,6 @@
 package com.courtreserve.service;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -311,11 +312,9 @@ class ReservaServiceTest {
         LocalTime horaInicio = LocalTime.of(18, 0);
         LocalTime horaFin = LocalTime.of(19, 0);
 
-        // ACT
-        reservaService.validarHorario(horaInicio, horaFin);
-
-        // ASSERT
-        // Si no se lanza ninguna excepción, el horario es válido.
+        // ACT + ASSERT
+        assertDoesNotThrow(
+                () -> reservaService.validarHorario(horaInicio, horaFin));
     }
 
     @Test
