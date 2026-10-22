@@ -86,7 +86,7 @@ Court Reserve utiliza una **arquitectura por capas**, separando las responsabili
 └─────────────────────┘
 ```
 
-La aplicación también utiliza **DTOs (Data Transfer Objects)** para separar las solicitudes y respuestas de la API de la representación interna de las entidades.
+La aplicación también utiliza **DTOs (Data Transfer Objects)** para separar las solicitudes y respuestas de la API de la representación interna de las entidades. Los DTO son `record` de Java: declaran sus campos una sola vez y las validaciones (`@NotBlank`, `@Email`, `@NotNull`) se aplican sobre sus componentes.
 
 ### Estructura principal
 
@@ -378,7 +378,7 @@ Durante el desarrollo se trabajaron conceptos relacionados con:
 
 - Separación de responsabilidades.
 - Arquitectura por capas.
-- DTOs para solicitudes y respuestas.
+- DTOs inmutables (`record`) para solicitudes y respuestas.
 - Validación de reglas de negocio.
 - Manejo centralizado de excepciones.
 - Pruebas unitarias aisladas.

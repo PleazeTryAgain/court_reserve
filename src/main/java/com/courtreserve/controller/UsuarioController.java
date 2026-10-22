@@ -35,9 +35,9 @@ public class UsuarioController {
             @Valid @RequestBody CrearUsuarioRequest request) {
 
         Usuario usuario = new Usuario(
-                request.getNombre(),
-                request.getCorreo(),
-                request.getTelefono());
+                request.nombre(),
+                request.correo(),
+                request.telefono());
 
         Usuario usuarioCreado = usuarioService.crearUsuario(usuario);
 
