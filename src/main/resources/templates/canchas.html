@@ -11,6 +11,8 @@
 
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+        crossorigin="anonymous"
         rel="stylesheet">
 </head>
 
@@ -110,12 +112,13 @@
 
                         <div class="mb-3">
 
-                            <label class="form-label">
+                            <label for="nombre" class="form-label">
                                 Nombre
                             </label>
 
                             <input
                                 type="text"
+                                id="nombre"
                                 name="nombre"
                                 class="form-control"
                                 maxlength="100"
@@ -125,11 +128,12 @@
 
                         <div class="mb-3">
 
-                            <label class="form-label">
+                            <label for="tipo" class="form-label">
                                 Tipo
                             </label>
 
                             <select
+                                id="tipo"
                                 name="tipo"
                                 class="form-select"
                                 required>
@@ -152,12 +156,13 @@
 
                         <div class="mb-3">
 
-                            <label class="form-label">
+                            <label for="precioHora" class="form-label">
                                 Precio por hora
                             </label>
 
                             <input
                                 type="number"
+                                id="precioHora"
                                 name="precioHora"
                                 class="form-control"
                                 min="1"
@@ -326,7 +331,9 @@
 
 
 <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js">
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+    crossorigin="anonymous">
 </script>
 
 </body>

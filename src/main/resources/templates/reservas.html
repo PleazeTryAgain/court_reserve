@@ -11,6 +11,8 @@
 
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+        crossorigin="anonymous"
         rel="stylesheet">
 </head>
 
@@ -112,11 +114,12 @@
 
                         <div class="mb-3">
 
-                            <label class="form-label">
+                            <label for="usuarioId" class="form-label">
                                 Usuario
                             </label>
 
                             <select
+                                id="usuarioId"
                                 name="usuarioId"
                                 class="form-select"
                                 required>
@@ -140,11 +143,12 @@
 
                         <div class="mb-3">
 
-                            <label class="form-label">
+                            <label for="canchaId" class="form-label">
                                 Cancha
                             </label>
 
                             <select
+                                id="canchaId"
                                 name="canchaId"
                                 class="form-select"
                                 required>
@@ -168,12 +172,13 @@
 
                         <div class="mb-3">
 
-                            <label class="form-label">
+                            <label for="fecha" class="form-label">
                                 Fecha
                             </label>
 
                             <input
                                 type="date"
+                                id="fecha"
                                 name="fecha"
                                 class="form-control"
                                 th:min="${fechaMinima}"
@@ -184,12 +189,13 @@
 
                         <div class="mb-3">
 
-                            <label class="form-label">
+                            <label for="horaInicio" class="form-label">
                                 Hora de inicio
                             </label>
 
                             <input
                                 type="time"
+                                id="horaInicio"
                                 name="horaInicio"
                                 class="form-control"
                                 required>
@@ -199,12 +205,13 @@
 
                         <div class="mb-3">
 
-                            <label class="form-label">
+                            <label for="horaFin" class="form-label">
                                 Hora de fin
                             </label>
 
                             <input
                                 type="time"
+                                id="horaFin"
                                 name="horaFin"
                                 class="form-control"
                                 required>
@@ -387,7 +394,9 @@
 
 
 <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js">
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+    crossorigin="anonymous">
 </script>
 
 </body>
