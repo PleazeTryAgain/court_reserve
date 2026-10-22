@@ -17,7 +17,7 @@ El proyecto fue desarrollado en el contexto de la materia **Calidad del Software
 | **Backend** | Java 17, Spring Boot 4.1.0, Spring MVC |
 | **Persistencia** | Spring Data JPA, Hibernate |
 | **Base de datos** | PostgreSQL |
-| **Frontend** | Thymeleaf, HTML, Bootstrap |
+| **Frontend** | Thymeleaf, HTML, Bootstrap 5.3.8 (CDN con verificación de integridad) |
 | **Testing** | JUnit 5, Mockito |
 | **Calidad** | JaCoCo, patrón AAA, pruebas de rendimiento |
 | **Construcción** | Gradle, Gradle Wrapper |
@@ -264,6 +264,15 @@ El reporte HTML generado puede consultarse en:
 ```text
 build/reports/jacoco/test/html/index.html
 ```
+
+---
+
+## Interfaz web
+
+Las plantillas Thymeleaf de `src/main/resources/templates` siguen dos reglas que SonarQube verifica:
+
+- **Accesibilidad:** cada campo de formulario tiene un `id` y su `<label>` lo referencia con `for`, para que los lectores de pantalla anuncien qué dato se pide.
+- **Integridad del CDN:** Bootstrap se carga desde jsDelivr con los atributos `integrity` y `crossorigin`. El navegador rechaza el archivo si su contenido no coincide con el hash. Si se cambia la versión de Bootstrap, hay que actualizar el hash con el que publica la [documentación de Bootstrap](https://getbootstrap.com/docs/5.3/getting-started/download/#cdn-via-jsdelivr).
 
 ---
 
