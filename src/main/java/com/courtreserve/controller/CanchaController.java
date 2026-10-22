@@ -35,9 +35,9 @@ public class CanchaController {
             @Valid @RequestBody CrearCanchaRequest request) {
 
         Cancha cancha = new Cancha(
-                request.getNombre(),
-                request.getTipo(),
-                request.getPrecioHora(),
+                request.nombre(),
+                request.tipo(),
+                request.precioHora(),
                 true);
 
         Cancha canchaCreada = canchaService.crearCancha(cancha);

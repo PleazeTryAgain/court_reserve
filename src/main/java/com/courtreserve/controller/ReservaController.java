@@ -34,11 +34,11 @@ public class ReservaController {
             @Valid @RequestBody CrearReservaRequest request) {
 
         Reserva reservaCreada = reservaService.crearReserva(
-                request.getUsuarioId(),
-                request.getCanchaId(),
-                request.getFecha(),
-                request.getHoraInicio(),
-                request.getHoraFin());
+                request.usuarioId(),
+                request.canchaId(),
+                request.fecha(),
+                request.horaInicio(),
+                request.horaFin());
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
