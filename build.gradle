@@ -113,6 +113,10 @@ sonar {
         ].join(',')
         property 'sonar.coverage.exclusions', '**/CourtReserveApplication.java'
 
+        // La tarea sonar falla si el Quality Gate no se cumple
+        property 'sonar.qualitygate.wait', 'true'
+        property 'sonar.qualitygate.timeout', '300'
+
         // Por defecto el plugin solo analiza src/main/java; se suman las plantillas Thymeleaf
         properties['sonar.sources'] += file('src/main/resources/templates')
     }

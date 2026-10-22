@@ -45,7 +45,7 @@ jobs:
             exit 1
           fi
           echo "Token válido."
-      - name: Análisis estático con SonarQube Cloud
+      - name: Análisis estático y Quality Gate de SonarQube Cloud
         if: ${{ github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository }}
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
