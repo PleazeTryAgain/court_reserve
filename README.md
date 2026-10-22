@@ -274,10 +274,27 @@ El workflow `.github/workflows/main.yml` se ejecuta en cada push a `main` y en c
 1. Compila el proyecto con Java 17.
 2. Ejecuta las pruebas unitarias, las de rendimiento y las de aceptación con Karate.
 3. Genera el reporte de cobertura JaCoCo y verifica el umbral mínimo.
-4. Envía el análisis estático a **SonarQube Cloud** (proyecto `PleazeTryAgain_court_reserve`, organización `pleazetryagain`) junto con la cobertura y los resultados de pruebas.
-5. Publica los reportes de pruebas y el `.jar` como artefactos.
+4. Envía el análisis estático a **SonarQube Cloud** (proyecto `PleazeTryAgain_court_reserve`, organización `pleazetryagain`) junto con la cobertura y los resultados de pruebas. Se analizan el código Java y las plantillas Thymeleaf.
+5. Espera el resultado del **Quality Gate**: si no se cumple, el workflow falla.
+6. Publica los reportes de pruebas y el `.jar` como artefactos.
 
 El análisis requiere el secret `SONAR_TOKEN` en el repositorio y tener desactivado el *Automatic Analysis* en SonarQube Cloud.
+
+### Quality Gate
+
+El proyecto usa el Quality Gate **Sonar way**, que se evalúa sobre el código nuevo de cada Pull Request:
+
+| Condición | Umbral |
+| --- | --- |
+| Cobertura | ≥ 80 % |
+| Líneas duplicadas | ≤ 3 % |
+| Calificación de confiabilidad, seguridad y mantenibilidad | A |
+| Security hotspots revisados | 100 % |
+
+Para que un Pull Request no pueda integrarse con el Quality Gate en rojo, la rama `main` debe estar protegida en GitHub (*Settings → Branches → Add branch ruleset*) con estas reglas:
+
+- Exigir un Pull Request antes de integrar.
+- Exigir que el check `build` del workflow termine correctamente.
 
 ---
 
